@@ -24,7 +24,6 @@ yarn-error.log*
 # Node.js / NPM
 node_modules/
 npm-debug.log
-package-lock.json
 
 # Java / Maven
 *.class
