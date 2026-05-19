@@ -1,7 +1,23 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "WebFetch(domain:oetsm.is-very-good.org)",
+      "Bash(curl -s \"https://oetsm.is-very-good.org/results?bewerb=Dlha%202024\")",
+      "Bash(curl -s \"https://oetsm.is-very-good.org/static/files/Dlha%202024/Ergebnisse/Rennen/%C3%96TSM%20RACE%201.csv\")",
+      "Bash(curl -s \"https://oetsm.is-very-good.org/results\")",
+      "Bash(curl -s \"https://oetsm.is-very-good.org/static/files/%C3%96TSM%20Bruck%202023/Ausschreibung/Zeitplan.pdf\" -o /tmp/zeitplan_bruck.pdf)",
+      "Bash(curl -s \"https://oetsm.is-very-good.org/static/files/Dlha%202024/Ausschreibung/Zeitplan.pdf\" -o /tmp/zeitplan_dlha.pdf)",
+      "Bash(curl -s \"https://oetsm.is-very-good.org/static/files/%C3%96TSM%20Bruck%202023/Ausschreibung/Zeitplan.pdf\")",
+      "Bash(curl -s \"https://oetsm.is-very-good.org/static/files/Dlha%202024/Ausschreibung/Zeitplan.pdf\")",
+      "Bash(curl -s \"https://oetsm.is-very-good.org/scores?bewerb=%C3%96TSM%20Bruck%202023\")",
+      "Bash(curl -s \"https://oetsm.is-very-good.org/scores?bewerb=Dlha%202024\")",
+      "Bash(node -e ' *)",
+      "Bash(curl -s \"https://oetsm.is-very-good.org/results?bewerb=Steelring%202026\")",
+      "Bash(curl -s \"https://www.jwracing.at/3h-cup-in-melk\")",
+      "Bash(curl -s \"http://timing.home.at/timing/\")",
+      "Bash(curl -s \"http://timing.home.at/timing/index.php\")",
+      "Bash(curl -s \"http://timing.home.at/timing/index.php?db=timing_aom22_slovakia1sa\")"
     ]
   }
 }
