@@ -40,8 +40,21 @@ const STACK = [
 
 export default function Coding() {
     return (
-        <main className="min-h-screen px-8 md:px-16 lg:px-24 py-16">
-            <div className="w-full max-w-5xl mx-auto flex flex-col gap-16">
+        <main className="min-h-screen px-8 md:px-16 lg:px-24 py-16 relative">
+            <Link
+                to="/"
+                aria-label="Home"
+                className="absolute top-6 left-6 md:top-8 md:left-12 z-10 block group"
+            >
+                <img
+                    src="/logo-inverted.svg"
+                    alt="Logo"
+                    className="h-14 md:h-20 lg:h-24 w-auto opacity-90 transition-all duration-300 group-hover:opacity-100 group-hover:scale-105"
+                    style={{ filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.4))' }}
+                    draggable={false}
+                />
+            </Link>
+            <div className="w-full max-w-5xl mx-auto flex flex-col gap-24 pt-16 md:pt-20">
 
                 <Link
                     to="/"

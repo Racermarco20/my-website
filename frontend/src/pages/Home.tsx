@@ -142,7 +142,21 @@ export default function Home() {
     const clipD = innerShape ? `${outerRect} ${innerShape}` : outerRect
 
     return (
-        <main className="min-h-screen flex items-center px-8 md:px-16 lg:px-24">
+        <main className="min-h-screen flex items-center px-8 md:px-16 lg:px-24 relative">
+            <Link
+                to="/"
+                aria-label={BRAND_NAME}
+                className="absolute top-6 left-6 md:top-8 md:left-12 z-10 block group"
+            >
+                <img
+                    src="/logo-inverted.svg"
+                    alt={BRAND_NAME}
+                    className="h-14 md:h-20 lg:h-24 w-auto opacity-90 transition-all duration-300 group-hover:opacity-100 group-hover:scale-105"
+                    style={{ filter: 'drop-shadow(0 4px 20px rgba(0,0,0,0.4))' }}
+                    draggable={false}
+                />
+            </Link>
+
             <div className="w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-12 items-center">
 
                 {/* Left: Text */}
