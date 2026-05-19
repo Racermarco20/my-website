@@ -5,6 +5,55 @@ import marcoFace from '../assets/marco-face.png'
 import marcoHelm from '../assets/marco-helm.png'
 
 const REVEAL_RADIUS = 140
+
+interface WorldCardProps {
+    to: string
+    label: string
+    sub: string
+    hoverColor: string
+}
+
+function WorldCard({ to, label, sub, hoverColor }: WorldCardProps) {
+    const [hovered, setHovered] = useState(false)
+    return (
+        <Link
+            to={to}
+            className="flex flex-col justify-between px-5 py-5 rounded-xl border transition-all duration-200 flex-1 overflow-hidden relative"
+            style={{
+                borderColor: hovered ? hoverColor : 'var(--color-border)',
+                backgroundColor: hovered ? 'var(--color-surface)' : 'transparent',
+                color: 'var(--color-text)',
+                boxShadow: hovered ? `0 0 22px -6px ${hoverColor}55` : 'none',
+                textDecoration: 'none',
+                minHeight: '90px',
+            }}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+        >
+            <span
+                className="absolute top-0 left-0 bottom-0 transition-all duration-200"
+                style={{
+                    width: '3px',
+                    backgroundColor: hoverColor,
+                    opacity: hovered ? 1 : 0.25,
+                }}
+            />
+            <span className="font-semibold text-sm pl-1">{label}</span>
+            <div className="flex items-end justify-between pl-1">
+                <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{sub}</span>
+                <span
+                    className="text-sm transition-all duration-200"
+                    style={{
+                        color: hovered ? hoverColor : 'var(--color-border)',
+                        transform: hovered ? 'translateX(2px)' : 'translateX(0)',
+                    }}
+                >
+                    →
+                </span>
+            </div>
+        </Link>
+    )
+}
 const STEPS = 80
 
 function getOrganicPath(cx: number, cy: number, r: number, t: number): string {
@@ -110,33 +159,30 @@ export default function Home() {
                         Manchmal beides gleichzeitig.
                     </p>
                     <div className="flex gap-4 mt-2">
-                        <Link
-                            to="/about"
-                            className="px-6 py-3 rounded-lg font-semibold text-sm transition-colors duration-200"
-                            style={{ backgroundColor: 'var(--color-brand)', color: '#fff' }}
-                            onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--color-brand-light)')}
-                            onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--color-brand)')}
-                        >
-                            Über mich
-                        </Link>
-                        <a
-                            href="https://github.com/Racermarco20"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="px-6 py-3 rounded-lg font-semibold text-sm border transition-colors duration-200"
-                            style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}
-                            onMouseEnter={e => {
-                                (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--color-brand)'
-                                ;(e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-brand)'
-                            }}
-                            onMouseLeave={e => {
-                                (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--color-border)'
-                                ;(e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-text-muted)'
-                            }}
-                        >
-                            GitHub
-                        </a>
+                        <WorldCard
+                            to="/coding"
+                            label="Coding"
+                            sub="Projekte & Stack"
+                            hoverColor="#4ade80"
+                        />
+                        <WorldCard
+                            to="/racing"
+                            label="Racing"
+                            sub="Karriere & Rennen"
+                            hoverColor="var(--color-brand)"
+                        />
                     </div>
+                    <a
+                        href="https://github.com/Racermarco20"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs mt-1 transition-colors duration-200"
+                        style={{ color: 'var(--color-text-muted)' }}
+                        onMouseEnter={e => ((e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-text)')}
+                        onMouseLeave={e => ((e.currentTarget as HTMLAnchorElement).style.color = 'var(--color-text-muted)')}
+                    >
+                        github.com/Racermarco20 ↗
+                    </a>
                 </div>
 
                 {/* Right: Image reveal */}
