@@ -44,7 +44,12 @@ npm-debug.log
 # Environment Dateien
 .env
 .env.*
-!env.example   # falls du ein Template behalten willst
+!.env.example   # Template darf eingecheckt werden
+
+# --- Analytics (Cloudflare Worker) ---
+analytics/node_modules/
+analytics/.wrangler/
+analytics/.dev.vars
 
 # Coverage / Tests
 coverage/

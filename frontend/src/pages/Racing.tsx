@@ -31,10 +31,10 @@ type Event = {
 }
 
 const STATS = [
-    { label: 'Rennen (SWS 2024)', value: '33' },
-    { label: 'Podien (SWS 2024)', value: '21' },
-    { label: 'Siege (SWS 2024)', value: '5' },
-    { label: 'Ø Platzierung', value: 'P4' },
+    { value: '3×',  label: 'ÖMSV Staatsmeister', sub: '2015 · 2016 · 2018' },
+    { value: 'P3',  label: 'SWS Weltfinale',     sub: 'Genk 2024' },
+    { value: '25+', label: 'Saisonsiege',        sub: 'SWS 2023' },
+    { value: '11+', label: 'Jahre Motorsport',   sub: 'seit 2015' },
 ]
 
 const EVENTS: Event[] = [
@@ -447,11 +447,18 @@ export default function Racing() {
                     {STATS.map(s => (
                         <div
                             key={s.label}
-                            className="flex flex-col gap-1 p-5 rounded-xl border"
+                            className="flex flex-col gap-2 p-5 rounded-xl border relative overflow-hidden"
                             style={{ borderColor: 'var(--color-border)', backgroundColor: 'var(--color-surface)' }}
                         >
-                            <span className="text-3xl font-bold" style={{ color: ACCENT }}>{s.value}</span>
-                            <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{s.label}</span>
+                            <span
+                                className="absolute top-0 left-0 right-0"
+                                style={{ height: '2px', backgroundColor: ACCENT, opacity: 0.5 }}
+                            />
+                            <span className="text-4xl font-bold leading-none" style={{ color: ACCENT }}>{s.value}</span>
+                            <div className="flex flex-col gap-0.5">
+                                <span className="text-sm font-medium" style={{ color: 'var(--color-text)' }}>{s.label}</span>
+                                <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{s.sub}</span>
+                            </div>
                         </div>
                     ))}
                 </section>

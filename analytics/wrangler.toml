@@ -1,0 +1,19 @@
+name = "marco-edge"
+main = "src/worker.ts"
+compatibility_date = "2025-01-01"
+
+# Public site origin allowed to call /track and /stats.
+# Set to your GitHub Pages URL (and any custom domain).
+[vars]
+ALLOWED_ORIGINS = "https://racermarco20.at,https://www.racermarco20.at,https://racermarco20.github.io,http://localhost:5173"
+
+# D1 database binding. Create the DB once with:
+#   wrangler d1 create marco-analytics
+# then paste the printed `database_id` below.
+[[d1_databases]]
+binding       = "DB"
+database_name = "marco-analytics"
+database_id   = "55e3ca1d-b8fd-4a6e-bd7b-d29c7cea45f4"
+
+# DASHBOARD_TOKEN is set as a secret, not here:
+#   wrangler secret put DASHBOARD_TOKEN
