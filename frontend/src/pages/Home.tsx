@@ -5,6 +5,8 @@ import marcoFace from '../assets/marco-face.png'
 import marcoHelm from '../assets/marco-helm.png'
 
 const REVEAL_RADIUS = 140
+const IDLE_RADIUS = 70
+const IDLE_DELAY_MS = 1500
 
 interface WorldCardProps {
     to: string
@@ -75,14 +77,16 @@ function getOrganicPath(cx: number, cy: number, r: number, t: number): string {
 export default function Home() {
     const containerRef = useRef<HTMLDivElement>(null)
     const [pos, setPos] = useState({ x: -999, y: -999 })
-    const [hovering, setHovering] = useState(false)
+    const [interacting, setInteracting] = useState(false)
     const [animRadius, setAnimRadius] = useState(0)
     const [time, setTime] = useState(0)
     const containerSizeRef = useRef({ width: 0, height: 0 })
     const rafRef = useRef<number>(0)
     const morphRafRef = useRef<number>(0)
+    const driftRafRef = useRef<number>(0)
     const speedRef = useRef(0)
     const lastPosRef = useRef({ x: -999, y: -999 })
+    const lastInteractRef = useRef(0)
 
     useEffect(() => {
         const el = containerRef.current
@@ -96,18 +100,18 @@ export default function Home() {
     }, [])
 
     useEffect(() => {
-        const target = hovering ? REVEAL_RADIUS : 0
+        const target = interacting ? REVEAL_RADIUS : IDLE_RADIUS
         const animate = () => {
             setAnimRadius(prev => {
                 const diff = target - prev
-                if (Math.abs(diff) < 1) return target
+                if (Math.abs(diff) < 0.5) return target
                 rafRef.current = requestAnimationFrame(animate)
-                return prev + diff * 0.18
+                return prev + diff * 0.12
             })
         }
         rafRef.current = requestAnimationFrame(animate)
         return () => cancelAnimationFrame(rafRef.current!)
-    }, [hovering])
+    }, [interacting])
 
     // Morphing — schneller je mehr Cursor-Bewegung
     useEffect(() => {
@@ -126,15 +130,44 @@ export default function Home() {
         return () => cancelAnimationFrame(morphRafRef.current!)
     }, [])
 
-    function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    // Idle auto-drift — sanfte Lissajous-Bewegung wenn niemand interagiert.
+    // Reduziert sich/stoppt sobald gehovered oder getoucht wird.
+    useEffect(() => {
+        const tick = () => {
+            const { width, height } = containerSizeRef.current
+            const sinceInteract = performance.now() - lastInteractRef.current
+            if (!interacting && sinceInteract > IDLE_DELAY_MS && width && height) {
+                const t = performance.now() / 1000
+                const cx = width  * 0.5 + Math.cos(t * 0.35) * width  * 0.28
+                const cy = height * 0.45 + Math.sin(t * 0.5)  * height * 0.22
+                setPos({ x: cx, y: cy })
+            }
+            driftRafRef.current = requestAnimationFrame(tick)
+        }
+        driftRafRef.current = requestAnimationFrame(tick)
+        return () => cancelAnimationFrame(driftRafRef.current!)
+    }, [interacting])
+
+    function updateFromPoint(clientX: number, clientY: number) {
         const rect = containerRef.current!.getBoundingClientRect()
-        const x = e.clientX - rect.left
-        const y = e.clientY - rect.top
+        const x = clientX - rect.left
+        const y = clientY - rect.top
         const dx = x - lastPosRef.current.x
         const dy = y - lastPosRef.current.y
         speedRef.current = Math.sqrt(dx * dx + dy * dy)
         lastPosRef.current = { x, y }
+        lastInteractRef.current = performance.now()
         setPos({ x, y })
+    }
+
+    function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+        updateFromPoint(e.clientX, e.clientY)
+    }
+
+    function handleTouchMove(e: React.TouchEvent<HTMLDivElement>) {
+        const t = e.touches[0]
+        if (!t) return
+        updateFromPoint(t.clientX, t.clientY)
     }
 
     const outerRect = 'M -9999,-9999 H 9999 V 9999 H -9999 Z'
@@ -142,7 +175,7 @@ export default function Home() {
     const clipD = innerShape ? `${outerRect} ${innerShape}` : outerRect
 
     return (
-        <main className="min-h-screen flex items-center px-8 md:px-16 lg:px-24 relative">
+        <main className="min-h-screen flex items-center px-8 md:px-16 lg:px-24 relative pt-28 pb-12 md:pt-0 md:pb-0">
             <Link
                 to="/"
                 aria-label={BRAND_NAME}
@@ -202,11 +235,15 @@ export default function Home() {
                 {/* Right: Image reveal */}
                 <div
                     ref={containerRef}
-                    className="relative w-full cursor-none select-none md:col-span-3 overflow-hidden"
-                    style={{ aspectRatio: '3/4' }}
+                    className="relative w-full select-none md:col-span-3 overflow-hidden mx-auto md:cursor-none max-w-[380px] md:max-w-none"
+                    style={{ aspectRatio: '3/4', touchAction: 'pan-y' }}
                     onMouseMove={handleMouseMove}
-                    onMouseEnter={() => setHovering(true)}
-                    onMouseLeave={() => { setHovering(false); setPos({ x: -999, y: -999 }) }}
+                    onMouseEnter={() => { setInteracting(true); lastInteractRef.current = performance.now() }}
+                    onMouseLeave={() => { setInteracting(false); lastInteractRef.current = performance.now() }}
+                    onTouchStart={e => { setInteracting(true); handleTouchMove(e) }}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={() => { setInteracting(false); lastInteractRef.current = performance.now() }}
+                    onTouchCancel={() => { setInteracting(false); lastInteractRef.current = performance.now() }}
                 >
                     {/* SVG clip-path definition */}
                     <svg aria-hidden="true" style={{ position: 'absolute', width: 0, height: 0 }}>
